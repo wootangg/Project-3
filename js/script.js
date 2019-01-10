@@ -6,6 +6,9 @@ $(document).ready(function() {
     //hide other-title input
     $('#other-title').css('display', 'none');
 
+    //change option selected in design
+    // $('#color option').removeAttr("selected");
+    $('#color').prepend('<option selected="selected">Please select a T-shirt Theme</option>');
 });
 
 //revealed when 'Other' is selected in job role
@@ -40,7 +43,7 @@ $('#design').on('click', function(){
 
             //add selected attr
             if( iLoveJs.test(userColor) ) {
-                $(userColorDisplay[0]).prop("selected",true);
+                $(userColorDisplay[1]).prop("selected",true);
                
             }
 
@@ -60,9 +63,9 @@ $('#design').on('click', function(){
             }
             
         } else {
-            $(userColorDisplay[i]). removeAttr("selected");
             $(userColorDisplay[0]).prop("selected",true);
         }
+        
     }
 
 });
@@ -73,7 +76,7 @@ $('.activities p').css('display', 'none');
 
 var priceTotal = 0;
 $('.activities input').on('change', function(){
-    //show prices when clicked    
+    //show prices when clicked
     $('.activities p').css('display', 'block');
 
     var prices = /\$\d+/;
@@ -95,6 +98,34 @@ $('.activities input').on('change', function(){
         $('.activities p').css('display', 'none');
     }
     $('.total_price').text('$' + priceTotal);
+
+    //disable same time activities
+    if( $('input[name="js-frameworks"]').is(':checked') ) {
+        $('input[name="express"]').prop('disabled', true)
+    } else {
+        $('input[name="express"]').prop('disabled', false);
+    }
+    
+    if( $('input[name="express"]').is(':checked') ) {
+        $('input[name="js-frameworks"]').prop('disabled', true)
+    } else {
+        $('input[name="js-frameworks"]').prop('disabled', false);
+    }
+
+    if( $('input[name="js-libs"]').is(':checked') ) {
+        $('input[name="node"]').prop('disabled', true)
+    } else {
+        $('input[name="node"]').prop('disabled', false);
+    }
+    
+    if( $('input[name="node"]').is(':checked') ) {
+        $('input[name="js-libs"]').prop('disabled', true)
+    } else {
+        $('input[name="js-libs"]').prop('disabled', false);
+    }
+
+
+    
 
 
 });
@@ -189,89 +220,92 @@ $('button:submit').on('click', function(e){
 
         $('.activities input').on('change', function(){
             $('.activity_error').remove();
-            
         });
         isValid = false;
     }
 
     //check credit card user input
-    var cardDigitChecker = /^(\d{13,16})$/;
-    if( !cardDigitChecker.test( $('#cc-num').val()) ) {
-        $('#cc-num').css('borderColor', 'red');
+    if( $('option[value="credit card"]').is(':selected') ) {
 
-        //check while user is typing
-        $('#cc-num').on('change paste keyup', function(){
-            //check credit card length
-            if( $('#cc-num').val().length ) {
-                $('#cc-num').css('borderColor', '#5e97b0')
-            } else {
-                $('#cc-num').css('borderColor', 'red')
-            }
 
-            if( !cardDigitChecker.test( $('#cc-num').val()) ){
-                if( !$('.creditcard_checker').length ) {
-                    $('#cc-num').after('<p class="creditcard_checker error_style">Between 13 and 16 digits</p>');
+        var cardDigitChecker = /^(\d{13,16})$/;
+        if( !cardDigitChecker.test( $('#cc-num').val()) ) {
+            $('#cc-num').css('borderColor', 'red');
+
+            //check while user is typing
+            $('#cc-num').on('change paste keyup', function(){
+                //check credit card length
+                if( $('#cc-num').val().length ) {
+                    $('#cc-num').css('borderColor', '#5e97b0')
+                } else {
+                    $('#cc-num').css('borderColor', 'red')
                 }
-            } else {
-                $('.creditcard_checker').remove();
-            }
-        });
 
-        isValid = false;
-    }
+                if( !cardDigitChecker.test( $('#cc-num').val()) ){
+                    if( !$('.creditcard_checker').length ) {
+                        $('#cc-num').after('<p class="creditcard_checker error_style">Between 13 and 16 digits</p>');
+                    }
+                } else {
+                    $('.creditcard_checker').remove();
+                }
+            });
 
-    //check zip code user input
-    var zipCodeChecker = /^(\d{5})$/;
-    if( !zipCodeChecker.test( $('#zip').val()) ) {
-        $('#zip').css('borderColor', 'red');
+            isValid = false;
+        }
 
-        //check while user is typing
-        $('#zip').on('change paste keyup', function(){
-            //check zip code length
-            if( $('#zip').val().length ) {
-                $('#zip').css('borderColor', '#5e97b0');
-            } else {
-                $('#zip').css('borderColor', 'red')
-            }
+        //check zip code user input
+        var zipCodeChecker = /^(\d{5})$/;
+        if( !zipCodeChecker.test( $('#zip').val()) ) {
+            $('#zip').css('borderColor', 'red');
 
-            if( !zipCodeChecker.test( $('#zip').val()) ) {
-                if( !$('.zipcode_checker').length ) {
-                    $('#zip').after('<p class="zipcode_checker error_style">Max 5 digits</p>');
-                } 
-            } else {
-                $('.zipcode_checker').remove();
+            //check while user is typing
+            $('#zip').on('change paste keyup', function(){
+                //check zip code length
+                if( $('#zip').val().length ) {
+                    $('#zip').css('borderColor', '#5e97b0');
+                } else {
+                    $('#zip').css('borderColor', 'red')
+                }
+
+                if( !zipCodeChecker.test( $('#zip').val()) ) {
+                    if( !$('.zipcode_checker').length ) {
+                        $('#zip').after('<p class="zipcode_checker error_style">Max 5 digits</p>');
+                    } 
+                } else {
+                    $('.zipcode_checker').remove();
+                    
+                }
                 
-            }
-            
-        });
+            });
 
-        isValid = false;
-    }
+            isValid = false;
+        }
 
-    //check cvv user input
-    var cvvChecker = /^(\d{3})$/;
-    if( !cvvChecker.test( $('#cvv').val()) ) {
-        $('#cvv').css('borderColor', 'red');
+        //check cvv user input
+        var cvvChecker = /^(\d{3})$/;
+        if( !cvvChecker.test( $('#cvv').val()) ) {
+            $('#cvv').css('borderColor', 'red');
 
-        //check while user is typing
-        $('#cvv').on('change paste keyup', function(){
-            //check cvv length
-            if( $('#cvv').val().length ) {
-                $('#cvv').css('borderColor', '#5e97b0')
-            } else {
-                $('#cvv').css('borderColor', 'red')
-            }
-
-            if( !cvvChecker.test( $('#cvv').val()) ) {
-                if( $('.cvv_checker').length <= 0 ) {
-                    $('#cvv').after('<p class="cvv_checker error_style">Max 3 digits</p>');
+            //check while user is typing
+            $('#cvv').on('change paste keyup', function(){
+                //check cvv length
+                if( $('#cvv').val().length ) {
+                    $('#cvv').css('borderColor', '#5e97b0')
+                } else {
+                    $('#cvv').css('borderColor', 'red')
                 }
-            } else {
-                $('.cvv_checker').remove();
-            }
-        });
 
-        isValid = false;
+                if( !cvvChecker.test( $('#cvv').val()) ) {
+                    if( $('.cvv_checker').length <= 0 ) {
+                        $('#cvv').after('<p class="cvv_checker error_style">Max 3 digits</p>');
+                    }
+                } else {
+                    $('.cvv_checker').remove();
+                }
+            });
+
+            isValid = false;
+        }
     }
 
 
