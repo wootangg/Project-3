@@ -23,6 +23,10 @@ $('#title').on('click', function(){
 });
 
 //match t-shirt info
+if( $('#design option:first').is(':selected') ) {
+    $('#color').prop('disabled', true);
+}
+
 $('#design').on('click', function(){
     var userDesign = $('#design option:selected').text();
     var userColorDisplay = $('#color option');
@@ -30,6 +34,13 @@ $('#design').on('click', function(){
     var iHeartJs = /I ♥ JS/;
     var userColor;
     userColorDisplay.show();
+
+    if( $('#design option:first').is(':selected') ) {
+        $('#color').prop('disabled', true);
+    } else {
+        $('#color').prop('disabled', false);
+    }
+
 
     for( var i = 0; i < userColorDisplay.length; i++ ) {
 
@@ -210,6 +221,25 @@ $('button:submit').on('click', function(e){
             $('.email_checker').remove();
         }
     });
+
+    //check t-shirt info selection
+    if( $('#design option:first').is(':selected') ) {
+        if( $('.tshirt_checker').length <= 0 ) {
+            $('.shirt').after('<p class="tshirt_checker error_style">Please select a design</p>');
+        }
+        isValid = false;
+    }
+    $('#design').on('change', function() {
+        if( !$('#design option:first').is(':selected') ) {
+            $('.tshirt_checker').remove();
+        } else {
+            if( $('.tshirt_checker').length <= 0 ) {
+                $('.shirt').after('<p class="tshirt_checker error_style">Please select design</p>');
+            }
+            isValid = false;
+        }
+    });
+
 
     //check activiites checkbox
     if( !$('.activities input:checked').length ) {
